@@ -13,16 +13,16 @@ app_ui = ui.page_fluid(
             ui.p("Expected result: Permission denied")
         ),
         
-        ui.panel(
+        ui.div(
             ui.h3("Test Results:"),
             ui.div(
                 ui.strong("Write attempt status:"), 
-                ui.verbatim(ui.output_text("write_status")),
+                ui.output_text_verbatim("write_status"),
                 style="margin: 20px 0; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"
             ),
             ui.div(
                 ui.strong("File existence check:"), 
-                ui.verbatim(ui.output_text("file_exists")),
+                ui.output_text_verbatim("file_exists"),
                 style="margin: 20px 0; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"
             )
         )

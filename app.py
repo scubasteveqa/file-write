@@ -1,5 +1,8 @@
 from shiny import App, ui, render, reactive
 import os
+import traceback
+import sys
+from io import StringIO
 
 # Use page_sidebar instead of layout_sidebar to make the sidebar visible by default
 app_ui = ui.page_sidebar(
@@ -26,11 +29,19 @@ app_ui = ui.page_sidebar(
         ui.strong("File existence check:"), 
         ui.output_text_verbatim("file_exists"),
         style="margin: 20px 0; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"
+    ),
+    ui.div(
+        ui.strong("Detailed Error Logs:"), 
+        ui.output_text_verbatim("error_logs"),
+        style="margin: 20px 0; padding: 10px; border: 1px solid #ddd; border-radius: 4px; background-color: #f8f8f8; font-family: monospace; white-space: pre-wrap;"
     )
 )
 
 def server(input, output, session):
     protected_file_path = "/mnt/dynamic-mounts/test-file.txt"
+    
+    # Reactive value to store detailed error logs
+    error_log = reactive.value("")
     
     @output
     @render.text
@@ -41,6 +52,11 @@ def server(input, output, session):
                     f.write("This should not be allowed")
                 return "SUCCESS - File was written (SECURITY ISSUE!)"
             except Exception as e:
+                # Capture detailed exception information
+                error_buffer = StringIO()
+                traceback.print_exc(file=error_buffer)
+                error_log.set(f"Exception type: {type(e).__name__}\nError message: {str(e)}\n\nTraceback:\n{error_buffer.getvalue()}")
+                
                 return f"EXPECTED ERROR - {str(e)}"
         return "No write attempt yet"
     
@@ -53,5 +69,14 @@ def server(input, output, session):
             else:
                 return "File does not exist (Expected result)"
         return "No check performed yet"
+    
+    @output
+    @render.text
+    def error_logs():
+        if input.write_file() and error_log.get():
+            return error_log.get()
+        elif input.write_file():
+            return "No errors captured (file was successfully written - SECURITY ISSUE!)"
+        return "No write attempt yet"
 
 app = App(app_ui, server)

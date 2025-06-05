@@ -26,11 +26,6 @@ app_ui = ui.page_sidebar(
         style="margin: 20px 0; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"
     ),
     ui.div(
-        ui.strong("File existence check:"), 
-        ui.output_text_verbatim("file_exists"),
-        style="margin: 20px 0; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"
-    ),
-    ui.div(
         ui.strong("Detailed Error Logs:"), 
         ui.output_text_verbatim("error_logs"),
         style="margin: 20px 0; padding: 10px; border: 1px solid #ddd; border-radius: 4px; background-color: #f8f8f8; font-family: monospace; white-space: pre-wrap;"

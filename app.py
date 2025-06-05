@@ -8,7 +8,9 @@ app_ui = ui.page_fluid(
     
     ui.layout_sidebar(
         ui.sidebar(
-            ui.input_action_button("write_file", "Write to Protected Directory"),
+            ui.input_action_button("write_file", "Write to Protected Directory", 
+                                   width="100%",  # Make button full width
+                                   class_="btn-lg"),  # Make button larger
             ui.hr(),
             ui.p("Expected result: Permission denied")
         ),
